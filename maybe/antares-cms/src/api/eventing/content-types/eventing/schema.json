@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "eventings",
+  "info": {
+    "singularName": "eventing",
+    "pluralName": "eventings",
+    "displayName": "eventing"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {}
+}

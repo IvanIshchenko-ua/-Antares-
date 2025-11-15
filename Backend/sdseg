@@ -1,0 +1,7 @@
+INSERT INTO users (username, email, password, role)
+VALUES (
+  'Юрійчук Анна',
+  'ms.yuriychuk@gmail.com',
+  '$2b$10$xbRPAffsAy6XxzzG9YPez.tHK.1yRYTcHiZ7F73X1jh3Wd5EbeXKK',
+  'admin'
+);

@@ -1,0 +1,17 @@
+{
+  "content-manager": {
+    "apiError": {
+      "Policy Failed": "Політика не виконана",
+      "Validation Error": "Помилка перевірки даних",
+      "Unknown Error": "Невідома помилка",
+      "Forbidden": "Доступ заборонено",
+      "Not Found": "Не знайдено",
+      "Bad Request": "Некоректний запит",
+      "Internal Server Error": "Внутрішня помилка сервера"
+    },
+    "listView": {
+      "loading": "Завантаження...",
+      "noEntries": "Немає записів"
+    }
+  }
+}

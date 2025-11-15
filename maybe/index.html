@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Уманська дитяча школа мистецтв «Антарес»</title>
+
+  <!-- Google Fonts & Bootstrap -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css"><!-- ваші стилі можна винести -->
+</head>
+<body>
+  <!-- PRELOADER -->
+  <div id="preloader" aria-hidden="true"><img src="img/logo.jpg" alt="Лого" /></div>
+
+  <!-- ======== Навбар та Hero залишаються без змін ======== -->
+  <!-- ... (залиште свій існуючий HTML для navbar, hero, about, transparency, modals) ... -->
+
+  <!-- ======== Факультети (динамічні) ======== -->
+  <section id="faculties" class="py-5 bg-white">
+    <div class="container">
+      <h2 class="text-center mb-2">Відділи</h2>
+      <p class="text-center text-muted mb-4">Тут ви можете визначитись, що вас надихає</p>
+      <div id="faculties-list" class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-3"></div>
+    </div>
+  </section>
+
+  <!-- ======== Галерея (динамічна) ======== -->
+  <section id="gallery" class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-4">Галерея</h2>
+      <div id="gallery-list" class="row g-3 gallery"></div>
+    </div>
+  </section>
+
+  <!-- ======== Події (динамічні) ======== -->
+  <section id="eventing" class="py-5 bg-white">
+    <div class="container">
+      <h2 class="text-center mb-3">Наші заходи</h2>
+      <div id="eventing-list" class="row g-3"></div>
+    </div>
+  </section>
+
+  <!-- ======== Контакти (динамічні) ======== -->
+  <section id="contacting" class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-4">Контакти</h2>
+      <div id="contacting-wrapper" class="row g-4 align-items-stretch"></div>
+    </div>
+  </section>
+
+  <footer class="py-3 text-center">
+    <div class="container small">© <span id="y"></span> Всі дані захищені</div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- ======== Strapi інтеграція ======== -->
+  <script>
+    const API = 'http://localhost:1337/api'; // ← змініть на свій
+
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    async function fetchData(endpoint) {
+      const res = await fetch(`${API}/${endpoint}?populate=*`);
+      if (!res.ok) throw new Error(`Помилка завантаження ${endpoint}`);
+      return (await res.json()).data;
+    }
+
+    // Відділи
+    fetchData('faculties').then(items => {
+      const c = document.getElementById('faculties-list');
+      c.innerHTML = items.map(i => {
+        const a = i.attributes;
+        const img = a.image?.data?.attributes?.url;
+        return `
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              <img src="${img ? API.replace('/api','') + img : 'img/placeholder.jpg'}" class="card-img-top" alt="${a.title}">
+              <div class="card-body d-flex flex-column">
+                <h3 class="h6 fw-bold">${a.title}</h3>
+                <div class="mt-auto"><a href="#" class="btn btn-primary w-100">Дізнатись більше</a></div>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }).catch(console.error);
+
+    // Галерея
+    fetchData('galleries').then(items => {
+      const c = document.getElementById('gallery-list');
+      c.innerHTML = items.map(i => {
+        const a = i.attributes;
+        const img = a.image?.data?.attributes?.url;
+        return `<div class="col-6 col-md-4 col-lg-2">
+                  <img src="${img ? API.replace('/api','') + img : 'img/placeholder.jpg'}" class="w-100 rounded" alt="${a.caption || ''}">
+                </div>`;
+      }).join('');
+    }).catch(console.error);
+
+    // Події
+    fetchData('eventing').then(items => {
+      const c = document.getElementById('eventing-list');
+      c.innerHTML = items.map(i => {
+        const a = i.attributes;
+        const img = a.image?.data?.attributes?.url;
+        return `<div class="col-6 col-lg-3">
+                  <img class="w-100 rounded-3 mb-2" src="${img ? API.replace('/api','') + img : 'img/placeholder.jpg'}" alt="${a.title}">
+                  <h6 class="fw-bold">${a.title}</h6>
+                  <p class="small text-muted">${a.date || ''}</p>
+                </div>`;
+      }).join('');
+    }).catch(console.error);
+
+    // Контакти
+    fetchData('contacting').then(items => {
+      const c = document.getElementById('contacting-wrapper');
+      if(!items.length) return;
+      const a = items[0].attributes;
+      c.innerHTML = `
+        <div class="col-md-5">
+          <img src="${a.image?.data?.attributes?.url ? API.replace('/api','') + a.image.data.attributes.url : 'img/contact.jpg'}" class="contact-img shadow-sm" alt="Контакти">
+        </div>
+        <div class="col-md-7">
+          <div class="p-4 bg-white rounded-3 shadow-sm">
+            <h3 class="h6 fw-bold">Наші контакти</h3>
+            <p><strong>Телефон:</strong> <a href="tel:${a.phone}">${a.phone}</a></p>
+            <p><strong>Адреса:</strong> ${a.address}</p>
+            <p><strong>Email:</strong> <a href="mailto:${a.email}">${a.email}</a></p>
+          </div>
+        </div>`;
+    }).catch(console.error);
+
+    // Preloader (як у вашому коді)
+    window.addEventListener('load', () => {
+      setTimeout(() => document.getElementById('preloader')?.classList.add('hide'), 2000);
+    });
+  </script>
+</body>
+</html>

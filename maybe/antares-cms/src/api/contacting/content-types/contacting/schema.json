@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contactings",
+  "info": {
+    "singularName": "contacting",
+    "pluralName": "contactings",
+    "displayName": "contacting"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {}
+}
