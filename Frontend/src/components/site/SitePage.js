@@ -22,7 +22,7 @@ const SitePage = () => {
   const [loading, setLoading] = useState(false);
 
   // Як і раніше, список сторінок, що завантажуються з бази через contentService
-  const dynamicPages = ['transparency']; // залишаємо логіку, але transparency зробимо особливим випадком
+  const dynamicPages = ['transparency']; // залишаємо логіку, але transparency зробимо особливим випадком?
 
   useEffect(() => {
     // Якщо це НЕ transparency — вантажимо контент через contentService
