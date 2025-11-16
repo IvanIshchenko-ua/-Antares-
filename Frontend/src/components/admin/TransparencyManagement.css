@@ -35,6 +35,7 @@
   border: 1px solid #e1e8ed;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .transparency-card:hover {
@@ -97,6 +98,7 @@
   color: #555;
   line-height: 1.6;
   flex: 1;
+  pointer-events: none;
 }
 
 .content-preview::after {
@@ -107,6 +109,7 @@
   right: 0;
   height: 40px;
   background: linear-gradient(transparent, white);
+  pointer-events: none;
 }
 
 .empty-state {
@@ -149,6 +152,8 @@
 .card-actions {
   margin-top: auto;
   text-align: center;
+    position: relative;   /* 🔥 додати */
+  z-index: 2;   
 }
 
 .editor-section {

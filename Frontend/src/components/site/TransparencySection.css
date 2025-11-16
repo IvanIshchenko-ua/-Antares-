@@ -12,9 +12,9 @@
 
 .transparency-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 🔥 3 картки строго в один ряд */
   gap: 2rem;
-  max-width: 1300px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
@@ -290,14 +290,6 @@
   margin: 1rem auto 3rem;
   background: linear-gradient(90deg, #4AAFF7, #00C6FF);
   border-radius: 2px;
-}
-
-.transparency-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  max-width: 1100px;
-  margin: 0 auto;
 }
 
 .transparency-card {

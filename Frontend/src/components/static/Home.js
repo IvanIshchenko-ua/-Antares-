@@ -45,7 +45,7 @@ const Home = () => {
     { id: 9, src: "../img/gallery9.webp", alt: "Фото 9" }
   ];
 
-  console.log('Тестові зображення:', testImages); // Додамо лог для перевірки
+  //console.log('Тестові зображення:', testImages); // Додамо лог для перевірки
 
   return (
     <div className="home-page">
@@ -74,17 +74,17 @@ const Home = () => {
           <h2>Наші напрямки навчання</h2>
           <div className="activity-list">
             <div className="activity">
-              <img src="/img/music.jpg" alt="Музичний відділ" />
+              <img src="/img/music.jpg" alt="Клавішні та фортепіанні відділи" />
               <h3>Музичний відділ</h3>
               <a href="/site/departments">Детальніше</a>
             </div>
             <div className="activity">
-              <img src="/img/art.jpg" alt="Художній відділ" />
+              <img src="/img/art.jpg" alt="Музичні інструменти та вокал" />
               <h3>Художній відділ</h3>
               <a href="/site/departments">Детальніше</a>
             </div>
             <div className="activity">
-              <img src="/img/dance.jpg" alt="Хореографія" />
+              <img src="/img/dance.jpg" alt="Художній відділ" />
               <h3>Хореографія</h3>
               <a href="/site/departments">Детальніше</a>
             </div>
@@ -92,29 +92,30 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="gallery">
-        <div className="container">
-          <h2>Галерея</h2>
-          <div style={{ maxWidth: '3200px', margin: '0 auto', padding: '20px' }}>
-            <Slider {...settings}>
-              {testImages.map((image) => (
-                <div key={image.id} style={{ padding: '0 10px' }}>
-                  <img 
-                    src={image.src} 
-                    alt={image.alt}
-                    style={{ 
-                      width: '100%', 
-                      height: '150px', 
-                      objectFit: 'cover',
-                      borderRadius: '8px'
-                    }}
-                  />
-                </div>
-              ))}
-            </Slider>
-          </div>
+<section className="gallery">
+  <div className="gallery-container">
+    <h2>Галерея</h2>
+
+    <Slider {...settings}>
+      {testImages.map((image) => (
+        <div key={image.id} style={{ padding: '0 15px' }}>
+          <img 
+            src={image.src} 
+            alt={image.alt}
+style={{ 
+  width: '240px',
+  height: '180px',
+  objectFit: 'cover',
+  borderRadius: '12px'
+}}
+          />
         </div>
-      </section>
+      ))}
+    </Slider>
+
+  </div>
+</section>
+
     </div>
   );
 };

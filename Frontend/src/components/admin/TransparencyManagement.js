@@ -169,7 +169,7 @@ const handleFileUpload = async (event) => {
           </div>
 
           <div className="documents-section">
-            <label>Документи (тимчасове зберігання):</label>
+            <label>Документи:</label>
             <div className="documents-upload">
              <input
               type="file"
@@ -179,7 +179,7 @@ const handleFileUpload = async (event) => {
                 accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                 />
               <small className="upload-hint">
-                Файли зберігаються тимчасово. Для постійного зберігання потрібно налаштувати серверне завантаження.
+                Файли зберігаються на R2.
               </small>
             </div>
 

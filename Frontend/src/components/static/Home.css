@@ -21,6 +21,10 @@
   display: block;
 }
 
+.slick-slide img:hover {
+  transform: none !important;
+}
+
 /* Галерея секція */
 .gallery {
   padding: 80px 40px;
@@ -179,6 +183,7 @@
   height: auto;
   min-height: 1px;
   display: none;
+  width: 260px !important;
 }
 
 .slick-slide img {
@@ -227,4 +232,16 @@
   font-size: 2.5rem;
   margin-bottom: 2rem;
   color: #2c3e50;
+}
+.gallery-container {
+  width: 100%;
+  max-width: 1800px;   /* 🔥 ахвікова ширина */
+  margin: 0 auto;
+  padding: 20px 40px;
+}
+.slick-prev, 
+.slick-next {
+  top: 40% !important;
+  width: 45px !important;
+  height: 45px !important;
 }

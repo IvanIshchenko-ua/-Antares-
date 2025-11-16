@@ -236,47 +236,46 @@ h1 {
 .activity-list {
     display: flex;
     justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
+    gap: 2rem;
+    flex-wrap: nowrap; /* ❗ 3 в один ряд */
 }
 
 .activity {
-    background-color: #e0f7fa;
-    border-radius: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
     overflow: hidden;
-    width: 360px;          /* 🔹 було 280px → стало ширше */
+    width: 320px;              /* 🟦 Ширина як у Bootstrap */
     text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* 🔹 додає обʼєм */
 }
 
 .activity:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 
 .activity img {
     width: 100%;
-    height: 260px;         /* 🔹 було 200px → стало вище */
+    height: 160px;            /* 🟦 Висота як у Bootstrap */
     object-fit: cover;
 }
 
 .activity h3 {
-    padding: 25px 15px 10px;
-    font-family: 'Montserrat Alternates', sans-serif;
-    color: #2c3e50;
-    font-size: 1.4rem;     /* 🔹 більший заголовок */
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin: 1rem 0;
 }
 
 .activity a {
-    display: block;
     background-color: #4AAFF7;
     color: white;
-    text-decoration: none;
-    padding: 15px;
-    border-radius: 0 0 20px 20px;
+    display: block;
+    padding: 12px;
     font-weight: 600;
-    font-size: 1rem;       /* 🔹 трошки більший шрифт */
+    border-radius: 0 0 12px 12px;
+    text-decoration: none;
     transition: background-color 0.3s ease;
 }
 
