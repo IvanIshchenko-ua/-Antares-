@@ -1,0 +1,11 @@
+{
+  "name": "antares-watchdog",
+  "version": "1.0.0",
+  "description": "Telegram Alerting & Health Watchdog for Antares School",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "test-alert": "node test-telegram.js"
+  }
+}

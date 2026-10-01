@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import { deleteFile, listFiles, uploadFile, getPresignedPutUrl } from '../services/r2Service';
 import { enqueueFileProcess } from '../utils/queue';
+import { authMiddleware, requireAdmin } from '../middleware/auth';
 
 const router = Router();
 
@@ -31,7 +32,7 @@ const upload = multer({
   fileFilter,
 });
 
-router.post('/', upload.single('image'), async (req: Request, res: Response) => {
+router.post('/', authMiddleware, requireAdmin, upload.single('image'), async (req: Request, res: Response) => {
   try {
     if (!req.file) {
       res.status(400).json({ error: 'No file uploaded' });
@@ -60,15 +61,12 @@ router.post('/', upload.single('image'), async (req: Request, res: Response) => 
     });
   } catch (error: any) {
     console.error('❌ R2 Upload error:', error);
-    res.status(500).json({
-      error: 'Upload failed',
-      details: error.message,
-    });
+    res.status(500).json({ error: 'Upload failed' });
   }
 });
 
 // Presign endpoint for direct-to-R2 uploads from client
-router.post('/presign', async (req: Request, res: Response) => {
+router.post('/presign', authMiddleware, requireAdmin, async (req: Request, res: Response) => {
   try {
     const { filename, contentType } = req.body as { filename?: string; contentType?: string };
     if (!filename || !contentType) {
@@ -80,12 +78,12 @@ router.post('/presign', async (req: Request, res: Response) => {
     res.json({ url, publicUrl: `${process.env.R2_PUBLIC_URL}/${filename}` });
   } catch (err: any) {
     console.error('Presign error', err);
-    res.status(500).json({ error: 'Presign failed', details: err.message });
+    res.status(500).json({ error: 'Presign failed' });
   }
 });
 
 // Client notifies backend that upload is complete so backend can enqueue processing
-router.post('/complete', async (req: Request, res: Response) => {
+router.post('/complete', authMiddleware, requireAdmin, async (req: Request, res: Response) => {
   try {
     const { filename, originalName } = req.body as { filename?: string; originalName?: string };
     if (!filename) {
@@ -97,11 +95,11 @@ router.post('/complete', async (req: Request, res: Response) => {
     res.json({ success: true, queued: true });
   } catch (err: any) {
     console.error('Complete enqueue error', err);
-    res.status(500).json({ error: 'Enqueue failed', details: err.message });
+    res.status(500).json({ error: 'Enqueue failed' });
   }
 });
 
-router.delete('/:filename', async (req: Request, res: Response) => {
+router.delete('/:filename', authMiddleware, requireAdmin, async (req: Request, res: Response) => {
   try {
     const { filename } = req.params;
     await deleteFile(filename);
@@ -112,14 +110,11 @@ router.delete('/:filename', async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error('❌ R2 Delete error:', error);
-    res.status(500).json({
-      error: 'Delete failed',
-      details: error.message,
-    });
+    res.status(500).json({ error: 'Delete failed' });
   }
 });
 
-router.get('/', async (_req: Request, res: Response) => {
+router.get('/', authMiddleware, requireAdmin, async (_req: Request, res: Response) => {
   try {
     const files = await listFiles();
     const fileList = files.map((file) => ({

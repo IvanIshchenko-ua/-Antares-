@@ -10,7 +10,7 @@ const NewsEditor = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     title: '',
     shortDescription: '',
@@ -113,8 +113,7 @@ const NewsEditor = () => {
   return (
     <div className="news-editor">
       <div className="editor-header">
-        <h1>{isEditMode ? 'Редагування новини' : 'Створення новини'}</h1>
-        <button 
+        <button
           onClick={() => navigate('/admin/news')}
           className="btn-back"
         >

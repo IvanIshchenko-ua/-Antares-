@@ -9,8 +9,11 @@ const api = axios.create({
 
 // Додайте перехоплювач для відладки
 api.interceptors.request.use(request => {
-  //console.log('🔄 Axios Request:', request.method?.toUpperCase(), request.url);
-  //console.log('📦 Request Data:', request.data);
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    request.headers.Authorization = `Bearer ${token}`;
+  }
+
   return request;
 });
 

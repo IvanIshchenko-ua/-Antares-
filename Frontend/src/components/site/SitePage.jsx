@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SiteLayout from './SiteLayout';
 import { contentService } from '../../services/contentService';
 import './SitePage.css';
 
-// Імпортуємо статичні компоненти
-import Home from '../static/Home';
-import About from '../static/About';
-import Departments from '../static/Departments';
-import Contacts from '../static/Contacts';
-import NewsList from '../news/NewsList';
-import NewsItem from '../news/NewsItem';
-import GalleryPage from './gallery/GalleryPage';
+const Home = lazy(() => import('../static/Home'));
+const About = lazy(() => import('../static/About'));
+const Departments = lazy(() => import('../static/Departments'));
+const Contacts = lazy(() => import('../static/Contacts'));
+const NewsList = lazy(() => import('../news/NewsList'));
+const NewsItem = lazy(() => import('../news/NewsItem'));
+const GalleryPage = lazy(() => import('./gallery/GalleryPage'));
+const TransparencySection = lazy(() => import('./TransparencySection'));
 
-// 🟦 Додаємо компонент прозорості
-import TransparencySection from './TransparencySection';
+const PageFallback = () => <div className="site-loading">Завантаження...</div>;
 
 const SitePage = () => {
   const { pageName } = useParams();
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
+  const staticPages = ['home', 'about', 'departments', 'contacts', 'news', 'gallery', 'transparency'];
 
   // Як і раніше, список сторінок, що завантажуються з бази через contentService
   const dynamicPages = ['transparency']; // залишаємо логіку, але transparency зробимо особливим випадком?
 
   useEffect(() => {
-    // Якщо це НЕ transparency — вантажимо контент через contentService
-    if (pageName && pageName !== 'transparency') {
+    // Завантажуємо CMS-контент лише для невідомих динамічних сторінок.
+    if (pageName && !staticPages.includes(pageName)) {
       loadContent();
     }
   }, [pageName]);
@@ -78,7 +78,9 @@ const SitePage = () => {
 
   return (
     <SiteLayout>
-      {renderContent()}
+      <Suspense fallback={<PageFallback />}>
+        {renderContent()}
+      </Suspense>
     </SiteLayout>
   );
 };
@@ -90,14 +92,18 @@ export const NewsPage = () => {
   if (id) {
     return (
       <SiteLayout>
-        <NewsItem />
+        <Suspense fallback={<PageFallback />}>
+          <NewsItem />
+        </Suspense>
       </SiteLayout>
     );
   }
 
   return (
     <SiteLayout>
-      <NewsList />
+      <Suspense fallback={<PageFallback />}>
+        <NewsList />
+      </Suspense>
     </SiteLayout>
   );
 };

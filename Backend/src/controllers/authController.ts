@@ -7,12 +7,17 @@ import { AuthRequest, LoginRequest, RegisterRequest } from '../types';
 
 export const login = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    console.log('🔐 Login attempt - body:', req.body);
-
     const { email, password } = req.body as LoginRequest;
     const identifier = email;
 
-    if (!identifier || !password) {
+    if (
+      typeof identifier !== 'string' ||
+      typeof password !== 'string' ||
+      !identifier.trim() ||
+      password.length < 1 ||
+      identifier.length > 160 ||
+      password.length > 256
+    ) {
       console.log('❌ Missing login/email or password');
       res.status(400).json({
         success: false,
@@ -62,12 +67,19 @@ export const login = async (req: AuthRequest, res: Response): Promise<void> => {
           return;
         }
 
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+          res.status(503).json({ success: false, message: 'Авторизація тимчасово недоступна' });
+          return;
+        }
+
         const token = jwt.sign(
           {
             userId: user.id,
             email: user.email,
+            role: user.role,
           },
-          process.env.JWT_SECRET || 'fallback_secret_antares',
+          jwtSecret,
           { expiresIn: '24h' }
         );
 
@@ -81,6 +93,7 @@ export const login = async (req: AuthRequest, res: Response): Promise<void> => {
             id: user.id,
             username: user.username,
             email: user.email,
+            role: user.role,
           },
         });
       });
@@ -96,11 +109,18 @@ export const login = async (req: AuthRequest, res: Response): Promise<void> => {
 
 export const register = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    console.log('📝 Registration attempt - body:', req.body);
-
     const { username, email, password } = req.body as RegisterRequest;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!username || !email || !password) {
+    if (
+      typeof username !== 'string' ||
+      typeof email !== 'string' ||
+      typeof password !== 'string' ||
+      !/^[a-zA-Z0-9_.-]{3,64}$/.test(username) ||
+      !emailPattern.test(email) ||
+      password.length < 12 ||
+      password.length > 256
+    ) {
       console.log('❌ Missing required fields');
       res.status(400).json({
         success: false,
@@ -164,7 +184,7 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
     console.error('❌ Register unexpected error:', error);
     res.status(500).json({
       success: false,
-      message: 'Внутрішня помилка сервера: ' + error.message,
+      message: 'Внутрішня помилка сервера',
     });
   }
 };
@@ -181,7 +201,13 @@ export const verifyToken = (req: AuthRequest, res: Response): void => {
       return;
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_antares');
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      res.status(503).json({ success: false, message: 'Авторизація тимчасово недоступна' });
+      return;
+    }
+
+    const decoded = jwt.verify(token, jwtSecret);
 
     res.json({
       success: true,

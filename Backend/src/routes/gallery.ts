@@ -6,13 +6,14 @@ import {
   getImageById,
   updateImage,
 } from '../controllers/galleryController';
+import { authMiddleware, requireAdmin } from '../middleware/auth';
 
 const router = Router();
 
 router.get('/', getAllImages);
 router.get('/:id', getImageById);
-router.post('/', createImage);
-router.put('/:id', updateImage);
-router.delete('/:id', deleteImage);
+router.post('/', authMiddleware, requireAdmin, createImage);
+router.put('/:id', authMiddleware, requireAdmin, updateImage);
+router.delete('/:id', authMiddleware, requireAdmin, deleteImage);
 
 export default router;

@@ -1,28 +1,121 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Montserrat+Alternates:wght@600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   --antares-navy: #0b2f4a;
-  --antares-sky: #21b5ff;
-  --antares-mist: #eaf7ff;
-  --antares-slate: #2f475a;
+  --antares-navy-dark: #071d2e;
+  --antares-navy-light: #164e75;
+  --antares-sky: #10c7e8;
+  --antares-sky-light: #75ecff;
+  --antares-sky-glow: rgba(16, 199, 232, 0.38);
+  --antares-gold: #ffd91a;
+  --antares-gold-light: #fff176;
+  --antares-mist: #e9fbff;
+  --antares-slate: #334155;
+  --antares-slate-light: #64748b;
+  --antares-border: #e2e8f0;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --shadow-sm: 0 2px 8px rgba(11, 47, 74, 0.04);
+  --shadow-md: 0 10px 25px -4px rgba(11, 47, 74, 0.08), 0 4px 10px -2px rgba(11, 47, 74, 0.03);
+  --shadow-lg: 0 20px 35px -6px rgba(11, 47, 74, 0.12), 0 8px 16px -4px rgba(11, 47, 74, 0.04);
+  --shadow-glow: 0 10px 30px rgba(33, 181, 255, 0.25);
+  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  padding: 0;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--antares-slate);
-  background: linear-gradient(180deg, #f2fbff 0%, #ffffff 38%, #f6fcff 100%);
+  background-color: #f8fafc;
+  overflow-x: hidden;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat Alternates', 'Montserrat', sans-serif;
+  letter-spacing: -0.015em;
+}
+
+/* Custom modern scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(33, 181, 255, 0.2);
+  color: #0b2f4a;
+}
+
+/* Base utility classes */
+.font-display {
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glassmorphism-dark {
+  background: rgba(7, 29, 46, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #0b2f4a 0%, #0284c7 60%, #21b5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-light {
+  background: linear-gradient(135deg, #ffffff 0%, #bbf7d0 40%, #79e3f4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-gold {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+}
+
+.card-hover {
+  transition: var(--transition-smooth);
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
 }
 
 * {

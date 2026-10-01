@@ -6,6 +6,7 @@ const newsService = {
     console.log('Making GET /news request');
     return api.get('/news');
   },
+  getAllAdminNews: () => api.get('/news/admin'),
   
   // Отримати одну новину по ID
   getNewsById: (id) => {
@@ -15,13 +16,11 @@ const newsService = {
   
   // Створити новину
   createNews: (newsData) => {
-    console.log('Making POST /news request with data:', newsData);
     return api.post('/news', newsData);
   },
   
   // Оновити новину
   updateNews: (id, newsData) => {
-    console.log(`Making PUT /news/${id} request with data:`, newsData);
     return api.put(`/news/${id}`, newsData);
   },
   

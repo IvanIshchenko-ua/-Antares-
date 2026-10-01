@@ -205,17 +205,17 @@ npm run type-check   # TypeScript check
 
 ## 📖 Key project features
 
-✅ **Full TypeScript support** — type-safe code across backend and frontend  
-✅ **Structured architecture** — clean separation of concerns  
-✅ **Modern React** — functional components with hooks  
-✅ **Express.js API** — RESTful endpoints with middleware  
-✅ **JWT authentication** — secure token-based auth  
-✅ **CORS enabled** — ready for cross-origin requests  
-✅ **Database setup** — automated MySQL table creation  
-✅ **Error handling** — consistent API responses  
-✅ **Custom hooks** — `useForm`, `useAsync` for common patterns  
-✅ **Utility services** — validation, storage, formatting helpers  
-✅ **ESLint + Prettier** — code quality and formatting  
+✅ **Full TypeScript support** — type-safe code across backend and frontend
+✅ **Structured architecture** — clean separation of concerns
+✅ **Modern React** — functional components with hooks
+✅ **Express.js API** — RESTful endpoints with middleware
+✅ **JWT authentication** — secure token-based auth
+✅ **CORS enabled** — ready for cross-origin requests
+✅ **Database setup** — automated MySQL table creation
+✅ **Error handling** — consistent API responses
+✅ **Custom hooks** — `useForm`, `useAsync` for common patterns
+✅ **Utility services** — validation, storage, formatting helpers
+✅ **ESLint + Prettier** — code quality and formatting
 
 ## 🐛 Troubleshooting
 
@@ -276,11 +276,51 @@ The project uses **MySQL** for data storage. Models are defined in `Backend/src/
 - Content pages with slug routing
 - Transparency/school info
 
+## 📱 Моніторинг та сповіщення на телефон (Telegram Watchdog)
+
+Проект має вбудовану систему цілодобового моніторингу **Antares Watchdog**, яка автоматично перевіряє доступність сайту та всіх його окремих компонентів кожні 30 секунд:
+
+- 🌐 **Публічний сайт (Cloudflare / Домен):** `https://antares-uman.art`
+- 💻 **Frontend:** Nginx/React контейнер
+- ⚙️ **Backend API:** `/health` Express сервера
+- 🩺 **Діагностика бекенду:** `/health/detailed`
+- 🗄 **База даних MySQL:** Порт 3306 та SQL-пінг
+- ⚡️ **Redis Кеш:** Порт 6379
+- 📰 **Модуль новин:** `/api/news`
+- 🖼 **Модуль фотогалереї:** `/api/gallery`
+- 📄 **Модуль прозорості:** `/api/transparency`
+
+### Швидке налаштування сповіщень:
+
+1. Створіть бота в Telegram:
+   - Відкрийте бота [@BotFather](https://t.me/BotFather) у Telegram і надішліть `/newbot`.
+   - Вкажіть ім'я та username бота. Скопіюйте отриманий **Bot Token**.
+2. Отримайте свій Chat ID:
+   - Зайдіть у бота [@userinfobot](https://t.me/userinfobot) або відправте `/start` вашому новоствореному боту.
+3. Додайте налаштування у файл `.env` в корені проекту:
+   ```env
+   TELEGRAM_BOT_TOKEN=ваш_токен_від_botfather
+   TELEGRAM_CHAT_ID=ваш_chat_id
+   ```
+4. Перевірте роботу сповіщення (надішле тестовий пуш на телефон):
+   ```bash
+   node monitor/test-telegram.js
+   ```
+5. Запустіть сервіси через Docker:
+   ```bash
+   docker compose up -d --build
+   ```
+
+### Команди в Telegram (керування з телефону):
+- `/status` — надіслати моментальний звіт про стан усіх 9 елементів сайту.
+- `/test` — перевірити тестове сповіщення про аварію та відновлення.
+- `/ping` — перевірити активність бота-сторожа.
+
 ## 📝 License & contributions
 
 This is an educational/school project. Contributions welcome — please open a pull request or contact the repository owner.
 
 ---
 
-**Version:** 2.0.0 (TypeScript refactor)  
+**Version:** 2.0.0 (TypeScript refactor)
 **Last updated:** December 2025

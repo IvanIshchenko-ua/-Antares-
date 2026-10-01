@@ -24,14 +24,13 @@ class NewsModel {
         COALESCE(u.username, 'Адміністрація') AS author,
         (n.status = 'published') AS isPublished,
         n.created_at AS publishDate,
-        0 AS views
+        (SELECT COUNT(*) FROM news_views nv WHERE nv.news_id = n.id) AS views
       FROM news n
       LEFT JOIN users u ON u.id = n.author_id
       WHERE n.status = 'published'
       ORDER BY n.created_at DESC
       LIMIT ? OFFSET ?
     `;
-    console.log('Executing SQL (paginated):', query, 'params:', [limit, offset]);
     db.query(query, [limit, offset], (err, results: any) => {
       if (err) {
         console.error('SQL Error:', err);
@@ -52,19 +51,17 @@ class NewsModel {
         COALESCE(u.username, 'Адміністрація') AS author,
         (n.status = 'published') AS isPublished,
         n.created_at AS publishDate,
-        0 AS views
+        (SELECT COUNT(*) FROM news_views nv WHERE nv.news_id = n.id) AS views
       FROM news n
       LEFT JOIN users u ON u.id = n.author_id
       WHERE n.id = ?
       LIMIT 1
     `;
-    console.log('Executing SQL:', query, 'with id:', id);
     db.query(query, [id], (err, results: any) => {
       if (err) {
         console.error('SQL Error:', err);
         return callback(err, undefined);
       }
-      console.log('SQL Results:', results);
       callback(null, results?.[0] as News | undefined);
     });
   }
@@ -80,8 +77,6 @@ class NewsModel {
     `;
     const content = fullContent || shortDescription;
     const status = isPublished === false ? 'draft' : 'published';
-    console.log('Executing SQL:', query, 'with data:', [title, content, authorId || 1, status, image || null]);
-
     db.query(
       query,
       [title, content, authorId || 1, status, image || null],
@@ -90,7 +85,6 @@ class NewsModel {
           console.error('SQL Error:', err);
           return callback(err, null);
         }
-        console.log('SQL Results - Insert ID:', result.insertId);
         callback(null, result);
       }
     );
@@ -109,8 +103,6 @@ class NewsModel {
       SET title = ?, content = ?, image_url = ?, status = ?, author_id = IFNULL(?, author_id)
       WHERE id = ?
     `;
-    console.log('Executing SQL:', query);
-
     db.query(
       query,
       [title, content, image || null, status, authorId ?? null, id],
@@ -119,7 +111,6 @@ class NewsModel {
           console.error('SQL Error:', err);
           return callback(err, null);
         }
-        console.log('SQL Results - Affected rows:', result.affectedRows);
         callback(null, result);
       }
     );
@@ -127,21 +118,32 @@ class NewsModel {
 
   static delete(id: number, callback: (err: QueryError | null, result: any) => void): void {
     const query = 'DELETE FROM news WHERE id = ?';
-    console.log('Executing SQL:', query, 'with id:', id);
-
     db.query(query, [id], (err, result: any) => {
       if (err) {
         console.error('SQL Error:', err);
         return callback(err, null);
       }
-      console.log('SQL Results - Affected rows:', result.affectedRows);
       callback(null, result);
     });
   }
 
   static incrementViews(_id: number, callback: (err: QueryError | null, result: any) => void): void {
-    // Legacy schema has no views column. Keep method for API compatibility.
     callback(null, { affectedRows: 0 });
+  }
+
+  static recordView(
+    newsId: number,
+    visitorKey: string,
+    callback: (err: QueryError | null, result: any) => void
+  ): void {
+    const query = 'INSERT IGNORE INTO news_views (news_id, visitor_key) VALUES (?, ?)';
+    db.query(query, [newsId, visitorKey], (err, result: any) => {
+      if (err) {
+        console.error('SQL Error recording news view:', err);
+        return callback(err, null);
+      }
+      callback(null, result);
+    });
   }
 
   static getAllForAdmin(callback: (err: QueryError | null, results: News[] | null) => void): void {
@@ -155,7 +157,7 @@ class NewsModel {
         COALESCE(u.username, 'Адміністрація') AS author,
         (n.status = 'published') AS isPublished,
         n.created_at AS publishDate,
-        0 AS views
+        (SELECT COUNT(*) FROM news_views nv WHERE nv.news_id = n.id) AS views
       FROM news n
       LEFT JOIN users u ON u.id = n.author_id
       ORDER BY n.created_at DESC

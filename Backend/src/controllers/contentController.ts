@@ -37,7 +37,7 @@ export const getPageContent = async (req: Request, res: Response): Promise<void>
     });
   } catch (error: any) {
     console.error('Server error:', error);
-    res.status(500).json({ error: error.message || 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -90,6 +90,6 @@ export const updatePageContent = async (req: Request, res: Response): Promise<vo
     });
   } catch (error: any) {
     console.error('Server error:', error);
-    res.status(500).json({ error: error.message || 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 };

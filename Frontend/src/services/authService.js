@@ -9,12 +9,9 @@ class AuthService {
 
   async login(identifier, password) {
     try {
-      console.log('🔄 Attempting login with:', { identifier, password });
-      
-      // Відправляємо пароль у відкритому вигляді - бекенд сам його хешує
       const response = await api.post('/auth/login', {
         email: identifier,
-        password: password // відправляємо оригінальний пароль, не хеш
+        password,
       });
 
       console.log('✅ Login response:', response.data);
@@ -28,7 +25,6 @@ class AuthService {
         localStorage.setItem('user', JSON.stringify(this.user));
         window.dispatchEvent(new Event('authChange'));
         
-        // Додаємо токен до заголовків для майбутніх запитів
         api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
         
         return response.data;

@@ -8,8 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "echo \"No tests configured\"",
-    "type-check": "tsc --noEmit"
+    "test": "echo \"No tests configured\""
   },
   "dependencies": {
     "@tinymce/tinymce-react": "^4.3.0",
@@ -19,9 +18,8 @@
     "lucide-react": "^0.552.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.8.0",
-    "react-slick": "^0.31.0",
-    "slick-carousel": "^1.8.1"
+    "react-router-dom": "^7.18.4",
+    "tinymce": "^8.9.2"
   },
   "browserslist": {
     "production": [
@@ -36,19 +34,21 @@
     ]
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.7.0",
+    "@types/node": "^20.10.6",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
-    "@types/react-slick": "^0.23.12",
-    "@types/node": "^20.10.6",
-    "@typescript-eslint/eslint-plugin": "^6.17.0",
-    "@typescript-eslint/parser": "^6.17.0",
+    "@typescript-eslint/eslint-plugin": "^8.71.0",
+    "@typescript-eslint/parser": "^8.71.0",
+    "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.56.0",
     "postcss": "^8.5.6",
     "prettier": "^3.1.1",
     "tailwindcss": "^3.4.17",
-    "vite": "^5.4.20",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vite": "^8.3.1"
+  },
+  "overrides": {
+    "tinymce": "^8.9.2"
   }
 }

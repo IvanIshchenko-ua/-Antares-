@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, NavLink } from 'react-router-dom';
-import Login from './components/auth/Login';
-import Dashboard from './components/dashboard/Dashboard';
-import Editor from './components/editor/Editor';
-import VisualEditor from './components/visual-editor/VisualEditor';
+import {
+  ExternalLink,
+  FolderOpen,
+  Images,
+  LayoutDashboard,
+  LogOut,
+  Newspaper,
+  Users,
+} from 'lucide-react';
 import SitePage, { NewsPage } from './components/site/SitePage';
-import NewsManagement from './components/admin/NewsManagement';
-import NewsEditor from './components/admin/NewsEditor';
-import GalleryManagement from './components/admin/GalleryManagement';
-import TransparencyManagement from './components/admin/TransparencyManagement'; // Додано
-import UsersManagement from './components/admin/UsersManagement';
-import UserCreate from './components/admin/UserCreate';
 import { authService } from './services/authService';
+import { LanguageProvider } from './context/LanguageContext';
 import './App.css';
 import './components/admin/admin.css';
+
+const Login = lazy(() => import('./components/auth/Login'));
+const Dashboard = lazy(() => import('./components/dashboard/Dashboard'));
+const Editor = lazy(() => import('./components/editor/Editor'));
+const VisualEditor = lazy(() => import('./components/visual-editor/VisualEditor'));
+const NewsManagement = lazy(() => import('./components/admin/NewsManagement'));
+const NewsEditor = lazy(() => import('./components/admin/NewsEditor'));
+const GalleryManagement = lazy(() => import('./components/admin/GalleryManagement'));
+const TransparencyManagement = lazy(() => import('./components/admin/TransparencyManagement'));
+const UsersManagement = lazy(() => import('./components/admin/UsersManagement'));
+const UserCreate = lazy(() => import('./components/admin/UserCreate'));
+
+const AppFallback = () => <div className="site-loading">Завантаження...</div>;
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -33,31 +46,35 @@ useEffect(() => {
 }, []);
 
   return (
-    <Router>
-      <div className="App">
-        <Routes>
+    <LanguageProvider>
+      <Router>
+        <div className="App">
+          <Suspense fallback={<AppFallback />}>
+            <Routes>
           {/* Публічні маршрути */}
           <Route path="/site/:pageName" element={<SitePage />} />
           <Route path="/site" element={<Navigate to="/site/home" replace />} />
-          
+
           {/* Окремий маршрут для новин з ID */}
           <Route path="/site/news/:id" element={<NewsPage />} />
-          
+
           {/* Адмін-маршрути */}
-          <Route 
-            path="/login" 
-            element={!isAuthenticated ? <Login /> : <Navigate to="/admin/dashboard" replace />} 
+          <Route
+            path="/login"
+            element={!isAuthenticated ? <Login /> : <Navigate to="/admin/dashboard" replace />}
           />
-          <Route 
-            path="/admin/*" 
-            element={isAuthenticated ? <AdminLayout /> : <Navigate to="/login" replace />} 
+          <Route
+            path="/admin/*"
+            element={isAuthenticated ? <AdminLayout /> : <Navigate to="/login" replace />}
           />
-          
+
           <Route path="/" element={<Navigate to="/site/home" replace />} />
           <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
-    </Router>
+            </Routes>
+          </Suspense>
+        </div>
+      </Router>
+    </LanguageProvider>
   );
 }
 
@@ -80,39 +97,53 @@ const AdminLayout = () => {
       <div className="admin-root">
         <aside className="admin-sidebar">
           <div className="sidebar-user">
-            <div className="user-avatar">{/* placeholder avatar */}</div>
+            <div className="user-avatar" aria-hidden="true">
+              {(user?.username || 'Г').slice(0, 1).toUpperCase()}
+            </div>
             <div className="user-info">
               <div className="user-name">{user?.username || 'Гість'}</div>
               <div className="user-email">{user?.email || ''}</div>
-              <button className="sidebar-logout" onClick={handleLogout}>Вийти</button>
+              <button className="sidebar-logout" onClick={handleLogout}>
+                <LogOut size={14} />
+                Вийти
+              </button>
             </div>
           </div>
-          <div className="admin-brand">ANTARES</div>
+          <div className="admin-brand">
+            <span className="admin-brand-mark">A</span>
+            <span>
+              <strong>Antares</strong>
+              <small>панель керування</small>
+            </span>
+          </div>
           <nav className="admin-nav">
             <NavLink to="/admin/dashboard" className={({isActive}) => 'nav-item' + (isActive? ' active' : '')}>
-              <span className="nav-icon">🏠</span><span className="nav-label">Dashboard</span>
+              <LayoutDashboard className="nav-icon" size={18} /><span className="nav-label">Огляд</span>
             </NavLink>
             <NavLink to="/admin/news" className={({isActive}) => 'nav-item' + (isActive? ' active' : '')}>
-              <span className="nav-icon">📰</span><span className="nav-label">Новини</span>
+              <Newspaper className="nav-icon" size={18} /><span className="nav-label">Новини</span>
             </NavLink>
             <NavLink to="/admin/gallery-management" className={({isActive}) => 'nav-item' + (isActive? ' active' : '')}>
-              <span className="nav-icon">🖼️</span><span className="nav-label">Галерея</span>
+              <Images className="nav-icon" size={18} /><span className="nav-label">Галерея</span>
             </NavLink>
             <NavLink to="/admin/transparency" className={({isActive}) => 'nav-item' + (isActive? ' active' : '')}>
-              <span className="nav-icon">📂</span><span className="nav-label">Прозорість</span>
+              <FolderOpen className="nav-icon" size={18} /><span className="nav-label">Прозорість</span>
             </NavLink>
             <NavLink to="/admin/users" className={({isActive}) => 'nav-item' + (isActive? ' active' : '')}>
-              <span className="nav-icon">👥</span><span className="nav-label">Користувачі</span>
+              <Users className="nav-icon" size={18} /><span className="nav-label">Користувачі</span>
             </NavLink>
             <a href="/site/home" target="_blank" rel="noreferrer" className="nav-item external">
-              <span className="nav-icon">👁️</span><span className="nav-label">Перегляд сайту</span>
+              <ExternalLink className="nav-icon" size={18} /><span className="nav-label">Перегляд сайту</span>
             </a>
           </nav>
         </aside>
 
         <main className="admin-main">
           <div className="admin-topbar">
-            <h2 style={{ margin: 0, color: '#243447' }}>Керування контентом</h2>
+            <div>
+              <span className="admin-eyebrow">Адміністративна панель</span>
+              <h2>Керування контентом</h2>
+            </div>
           </div>
 
           <div style={{ maxWidth: 1200 }}>
@@ -147,10 +178,10 @@ const AdminLayout = () => {
 
 const NotFound = () => {
   return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
       height: '100vh',
       flexDirection: 'column',
       textAlign: 'center'
@@ -158,7 +189,7 @@ const NotFound = () => {
       <h1 style={{ fontSize: '3rem', color: '#2c3e50', marginBottom: '1rem' }}>404</h1>
       <h2 style={{ color: '#7f8c8d', marginBottom: '2rem' }}>Сторінку не знайдено</h2>
       <div style={{ display: 'flex', gap: '1rem' }}>
-        <a 
+        <a
           href="/site/home"
           style={{
             backgroundColor: '#4AAFF7',
@@ -171,7 +202,7 @@ const NotFound = () => {
         >
           На головну
         </a>
-        <a 
+        <a
           href="/admin/dashboard"
           style={{
             backgroundColor: '#9b59b6',

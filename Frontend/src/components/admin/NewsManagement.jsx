@@ -13,7 +13,7 @@ const NewsManagement = () => {
 
   const loadNews = async () => {
     try {
-      const response = await newsService.getAllNews();
+      const response = await newsService.getAllAdminNews();
       setNews(response.data);
     } catch (error) {
       console.error('Помилка завантаження новин:', error);

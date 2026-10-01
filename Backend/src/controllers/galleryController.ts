@@ -28,7 +28,7 @@ export const getAllImages = async (req: Request, res: Response): Promise<void> =
     });
   } catch (error: any) {
     console.error('Server error:', error);
-    res.status(500).json({ error: error.message || 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -44,7 +44,7 @@ export const getImageById = async (req: Request, res: Response): Promise<void> =
     GalleryModel.getById(id, (err, result) => {
       if (err) {
         console.error('Database error:', err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Database error' });
         return;
       }
 
@@ -57,7 +57,7 @@ export const getImageById = async (req: Request, res: Response): Promise<void> =
     });
   } catch (error: any) {
     console.error('Server error:', error);
-    res.status(500).json({ error: error.message || 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -73,7 +73,7 @@ export const createImage = async (req: Request, res: Response): Promise<void> =>
     GalleryModel.create({ title, description, image_url, category }, async (err, result: any) => {
       if (err) {
         console.error('Database error:', err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Database error' });
         return;
       }
 
@@ -85,7 +85,7 @@ export const createImage = async (req: Request, res: Response): Promise<void> =>
     });
   } catch (error: any) {
     console.error('Server error:', error);
-    res.status(500).json({ error: error.message || 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -103,7 +103,7 @@ export const updateImage = async (req: Request, res: Response): Promise<void> =>
     GalleryModel.update(id, { title, description, image_url, category, is_published }, async (err, result: any) => {
       if (err) {
         console.error('Database error:', err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Database error' });
         return;
       }
 
@@ -118,7 +118,7 @@ export const updateImage = async (req: Request, res: Response): Promise<void> =>
     });
   } catch (error: any) {
     console.error('Server error:', error);
-    res.status(500).json({ error: error.message || 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -134,7 +134,7 @@ export const deleteImage = async (req: Request, res: Response): Promise<void> =>
     GalleryModel.delete(id, async (err, result: any) => {
       if (err) {
         console.error('Database error:', err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Database error' });
         return;
       }
 
@@ -149,6 +149,6 @@ export const deleteImage = async (req: Request, res: Response): Promise<void> =>
     });
   } catch (error: any) {
     console.error('Server error:', error);
-    res.status(500).json({ error: error.message || 'Server error' });
+    res.status(500).json({ error: 'Server error' });
   }
 };

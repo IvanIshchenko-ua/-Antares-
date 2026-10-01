@@ -1,5 +1,5 @@
 .contacts-section {
-  background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);
+  background: transparent;
   padding: 5rem 1rem;
   font-family: "Montserrat", sans-serif;
 }
@@ -170,7 +170,7 @@
 
 .info-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   background: #f8fbff;
   padding: 1.5rem;
@@ -178,4 +178,10 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   min-height: 120px; /* однаковий мінімум */
+}
+
+.info-item > div {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
 }

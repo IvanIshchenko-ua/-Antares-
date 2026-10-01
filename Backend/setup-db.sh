@@ -44,6 +44,15 @@ CREATE TABLE IF NOT EXISTS news (
   FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Unique news views per browser or authenticated user
+CREATE TABLE IF NOT EXISTS news_views (
+  news_id INT NOT NULL,
+  visitor_key VARCHAR(191) NOT NULL,
+  viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (news_id, visitor_key),
+  FOREIGN KEY (news_id) REFERENCES news(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Gallery table
 CREATE TABLE IF NOT EXISTS gallery (
   id INT AUTO_INCREMENT PRIMARY KEY,

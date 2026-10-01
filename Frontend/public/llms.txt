@@ -1,0 +1,13 @@
+# Antares School of Arts
+
+Uman Children’s School of Arts is a creative educational space for children in Uman, Ukraine. The school offers music, visual arts, choreography, theatre and choir programs.
+
+## Public Pages
+
+- [Home](/site/home)
+- [About the school](/site/about)
+- [Departments and programs](/site/departments)
+- [News and announcements](/site/news)
+- [Photo and video gallery](/site/gallery)
+- [Transparency and public information](/site/transparency)
+- [Contacts](/site/contacts)

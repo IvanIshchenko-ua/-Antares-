@@ -275,3 +275,81 @@
     padding-right: 1rem;
   }
 }
+
+/* BRIGHT ART SCHOOL PALETTE */
+.transparency-section {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255, 230, 26, 0.26), transparent 34%),
+    radial-gradient(circle at 88% 82%, rgba(16, 199, 232, 0.2), transparent 38%),
+    linear-gradient(135deg, #e9fbff 0%, #fffde2 100%);
+}
+
+.transparency-section .section-title {
+  color: #00476b;
+}
+
+.transparency-section .section-title::after {
+  background: linear-gradient(90deg, #fff200 0%, #10c7e8 100%);
+  box-shadow: 0 0 14px rgba(16, 199, 232, 0.25);
+}
+
+.transparency-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(16, 199, 232, 0.24);
+  box-shadow: 0 10px 28px rgba(0, 128, 157, 0.09);
+}
+
+.transparency-card::before {
+  background: radial-gradient(circle, rgba(255, 230, 26, 0.3), transparent 65%);
+}
+
+.transparency-card:hover {
+  border-color: rgba(255, 217, 26, 0.8);
+  box-shadow: 0 18px 38px rgba(0, 128, 157, 0.16);
+}
+
+.card-title {
+  color: #00476b;
+}
+
+.btn-transparency {
+  color: #064462;
+  background: linear-gradient(135deg, #fff200 0%, #ffc400 100%);
+  box-shadow: 0 8px 20px rgba(255, 217, 26, 0.3);
+}
+
+.btn-transparency:hover {
+  box-shadow: 0 12px 24px rgba(255, 217, 26, 0.42);
+  background: linear-gradient(135deg, #fff76a 0%, #ffd21a 100%);
+}
+
+.modal-content {
+  border: 1px solid rgba(16, 199, 232, 0.28);
+}
+
+.modal-header {
+  background: linear-gradient(110deg, #007d9f 0%, #10c7e8 64%, #fff200 100%);
+}
+
+.documents-section {
+  border-color: rgba(255, 217, 26, 0.5);
+  background: #fffde2;
+}
+
+.document-item {
+  border-color: rgba(16, 199, 232, 0.2);
+}
+
+.document-link {
+  color: #0085a7;
+}
+
+.btn-close-modal {
+  border-color: #ffd21a;
+  background: #fff3a6;
+  color: #064462;
+}
+
+.btn-close-modal:hover {
+  background: #fff200;
+}

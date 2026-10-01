@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import NewsModel from '../models/News';
-import { cacheGet, cacheSet } from '../utils/cache';
+import { cacheGet, cacheSet, cacheDel, cacheDelPrefix } from '../utils/cache';
 import { NewsCreateData } from '../types';
+import { getVisitorKey } from '../utils/visitor';
 
 export const getAllNews = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -31,6 +32,18 @@ export const getAllNews = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
+export const getAllNewsForAdmin = (_req: Request, res: Response): void => {
+  NewsModel.getAllForAdmin((err, results) => {
+    if (err) {
+      console.error('Помилка отримання новин для admin:', err);
+      res.status(500).json({ error: 'Помилка сервера' });
+      return;
+    }
+
+    res.json(results || []);
+  });
+};
+
 export const getNewsById = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = Number(req.params.id);
@@ -41,29 +54,34 @@ export const getNewsById = async (req: Request, res: Response): Promise<void> =>
     }
 
     const cacheKey = `news:id:${id}`;
-    const cached = await cacheGet(cacheKey);
-    if (cached) {
-      // Fire-and-forget increment in background
-      NewsModel.incrementViews(id, () => {});
-      res.json(cached);
-      return;
-    }
+    const visitorKey = getVisitorKey(req, res);
+    NewsModel.recordView(id, visitorKey, async (viewError) => {
+      if (viewError) {
+        console.error('Помилка запису перегляду:', viewError);
+      }
 
-    NewsModel.getById(id, async (err, result) => {
-      if (err) {
-        console.error('Помилка бази даних:', err);
-        res.status(500).json({ error: 'Помилка сервера' });
+      await cacheDel(cacheKey);
+      const cached = await cacheGet(cacheKey);
+      if (cached) {
+        res.json(cached);
         return;
       }
 
-      if (!result) {
-        res.status(404).json({ error: 'Новину не знайдено' });
-        return;
-      }
+      NewsModel.getById(id, async (err, result) => {
+        if (err) {
+          console.error('Помилка бази даних:', err);
+          res.status(500).json({ error: 'Помилка сервера' });
+          return;
+        }
 
-      NewsModel.incrementViews(id, () => {});
-      await cacheSet(cacheKey, result, 60 * 5); // cache 5 minutes
-      res.json(result);
+        if (!result) {
+          res.status(404).json({ error: 'Новину не знайдено' });
+          return;
+        }
+
+        await cacheSet(cacheKey, result, 60 * 5);
+        res.json(result);
+      });
     });
   } catch (error: any) {
     console.error('Помилка отримання новини:', error);
@@ -92,9 +110,11 @@ export const createNews = async (req: Request, res: Response): Promise<void> => 
         return;
       }
 
-      res.status(201).json({
-        message: 'Новину створено успішно',
-        id: result?.insertId,
+      cacheDelPrefix('news:').finally(() => {
+        res.status(201).json({
+          message: 'Новину створено успішно',
+          id: result?.insertId,
+        });
       });
       }
     );
@@ -126,7 +146,9 @@ export const updateNews = async (req: Request, res: Response): Promise<void> => 
         return;
       }
 
-      res.json({ message: 'Новину оновлено успішно' });
+      cacheDelPrefix('news:').finally(() => {
+        res.json({ message: 'Новину оновлено успішно' });
+      });
     });
   } catch (error: any) {
     console.error('Помилка оновлення новини:', error);
@@ -155,7 +177,9 @@ export const deleteNews = async (req: Request, res: Response): Promise<void> => 
         return;
       }
 
-      res.json({ message: 'Новину видалено успішно' });
+      cacheDelPrefix('news:').finally(() => {
+        res.json({ message: 'Новину видалено успішно' });
+      });
     });
   } catch (error: any) {
     console.error('Помилка видалення новини:', error);

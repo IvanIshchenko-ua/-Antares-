@@ -7,6 +7,7 @@ export interface User extends RowDataPacket {
   username: string;
   email: string;
   password: string;
+  role: 'user' | 'admin' | 'teacher';
   created_at?: Date;
 }
 
@@ -26,6 +27,7 @@ export interface RegisterRequest {
 export interface JWTPayload {
   userId: number;
   email: string;
+  role: 'user' | 'admin' | 'teacher';
 }
 
 // News types

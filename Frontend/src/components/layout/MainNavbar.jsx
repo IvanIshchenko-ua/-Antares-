@@ -19,7 +19,10 @@ const MainNavbar = () => {
 
       <div className="nav-center">
         <Link to="/site/home">
-          <img src="/img/logo_nav.png" alt="Антарес" className="logo" />
+          <span className="text-logo">
+            <span>Antares</span>
+            <small>school of mysticism</small>
+          </span>
         </Link>
       </div>
 

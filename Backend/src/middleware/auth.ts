@@ -3,21 +3,63 @@ import * as jwt from 'jsonwebtoken';
 import { AuthRequest, JWTPayload } from '../types';
 
 export const authMiddleware = (req: AuthRequest, _res: Response, next: NextFunction): void => {
-  try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+  const token = req.header('Authorization')?.replace(/^Bearer\s+/i, '');
 
-    if (!token) {
-      console.log('ℹ️ No token provided, but allowing for testing');
-      req.user = { userId: 1, email: 'test@admin.com' } as JWTPayload;
-      return next();
+  if (!token) {
+    _res.status(401).json({ success: false, message: 'Потрібна авторизація' });
+    return;
+  }
+
+  try {
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      _res.status(503).json({ success: false, message: 'Авторизація тимчасово недоступна' });
+      return;
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret-antares') as JWTPayload;
+    const decoded = jwt.verify(
+      token,
+      jwtSecret
+    ) as JWTPayload;
+
+    if (!decoded.userId || !decoded.email || !decoded.role) {
+      _res.status(401).json({ success: false, message: 'Недійсний токен' });
+      return;
+    }
+
     req.user = decoded;
     next();
-  } catch (error: any) {
-    console.log('⚠️ Auth error, but allowing for testing:', error.message);
-    req.user = { userId: 1, email: 'test@admin.com' } as JWTPayload;
-    next();
+  } catch {
+    _res.status(401).json({ success: false, message: 'Недійсний токен' });
   }
+};
+
+export const optionalAuthMiddleware = (req: AuthRequest, _res: Response, next: NextFunction): void => {
+  const token = req.header('Authorization')?.replace(/^Bearer\s+/i, '');
+  const jwtSecret = process.env.JWT_SECRET;
+
+  if (!token || !jwtSecret) {
+    next();
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, jwtSecret) as JWTPayload;
+    if (decoded.userId && decoded.email && decoded.role) {
+      req.user = decoded;
+    }
+  } catch {
+    // Public news remains available when an optional token is expired.
+  }
+
+  next();
+};
+
+export const requireAdmin = (req: AuthRequest, res: Response, next: NextFunction): void => {
+  if (req.user?.role !== 'admin') {
+    res.status(403).json({ success: false, message: 'Недостатньо прав' });
+    return;
+  }
+
+  next();
 };
